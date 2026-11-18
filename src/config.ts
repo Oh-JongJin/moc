@@ -8,15 +8,15 @@ export const config = {
   groom: {
     name: '오종진',
     father: '오○○',
-    mother: '박○○',
-    relation: '장남',
+    mother: '배○○',
+    relation: '아들',
     phone: '010-0000-0000',
   },
   bride: {
     name: '배지은',
     father: '배○○',
-    mother: '최○○',
-    relation: '차녀',
+    mother: '정○○',
+    relation: '딸',
     phone: '010-0000-0000',
   },
 
@@ -41,6 +41,9 @@ export const config = {
   // 네이버 클라우드 플랫폼 > Maps 에서 발급받은 Client ID를 넣으면 실제 지도가 표시됩니다.
   naverMapClientId: 'cnti2dzro5',
 
+  // 배경음악: public 폴더에 있는 파일 이름. 비워 두면 음악 버튼이 사라집니다.
+  bgm: 'b.mp3',
+
   greeting: [
     '해가 저무는 바다 앞에서',
     '서로의 하루 끝이 되어주기로 약속했습니다.',
@@ -54,12 +57,12 @@ export const config = {
     groom: [
       { role: '신랑', name: '오종진', bank: '○○은행', number: '000-000-000000' },
       { role: '아버지', name: '오○○', bank: '○○은행', number: '000-000-000000' },
-      { role: '어머니', name: '박○○', bank: '○○은행', number: '000-000-000000' },
+      { role: '어머니', name: '배○○', bank: '○○은행', number: '000-000-000000' },
     ],
     bride: [
       { role: '신부', name: '배지은', bank: '○○은행', number: '000-000-000000' },
       { role: '아버지', name: '배○○', bank: '○○은행', number: '000-000-000000' },
-      { role: '어머니', name: '최○○', bank: '○○은행', number: '000-000-000000' },
+      { role: '어머니', name: '정○○', bank: '○○은행', number: '000-000-000000' },
     ],
   },
 

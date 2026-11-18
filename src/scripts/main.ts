@@ -11,15 +11,68 @@ function toast(message: string) {
 }
 
 // ----- 인트로: 한 번 본 뒤에는 생략합니다 -----
+// 인트로는 화면이 자리 잡은 뒤 index.astro 의 첫 스크립트가 시작시킵니다.
 // 인트로 중에도 스크롤은 그대로 되므로, 화면을 건드렸다고 중간에 끊지 않습니다.
-// (중간에 끊으면 확대돼 있던 사진이 원래 크기로 뚝 바뀌어 보입니다.)
 const html = document.documentElement;
-if (html.classList.contains('intro')) {
+const introPlanned = html.dataset.intro === '1';
+if (introPlanned) {
   try {
     sessionStorage.setItem('intro-seen', '1');
   } catch {}
   // 모든 움직임이 끝난 뒤에 정리합니다. 이 시점에는 화면이 이미 최종 상태라 변화가 보이지 않습니다.
-  window.setTimeout(() => html.classList.remove('intro'), 6500);
+  const cleanUp = () => window.setTimeout(() => html.classList.remove('intro'), 6500);
+  if (html.classList.contains('intro')) cleanUp();
+  else document.addEventListener('intro-start', cleanUp, { once: true });
+}
+
+// ----- 배경음악 -----
+// 브라우저가 자동 재생을 막기 때문에 버튼을 눌러야 시작합니다. 파일도 그때 처음 내려받습니다.
+const bgmBtn = document.getElementById('bgm');
+if (bgmBtn) {
+  const hint = document.getElementById('bgm-hint');
+  let audio: HTMLAudioElement | null = null;
+  let wanted = false; // 사용자가 음악을 켜 둔 상태인지
+
+  const render = (playing: boolean) => {
+    bgmBtn.classList.toggle('playing', playing);
+    bgmBtn.setAttribute('aria-pressed', String(playing));
+    bgmBtn.setAttribute('aria-label', playing ? '배경음악 끄기' : '배경음악 재생');
+  };
+
+  bgmBtn.addEventListener('click', async () => {
+    hint?.classList.remove('show');
+    if (!audio) {
+      audio = new Audio(bgmBtn.dataset.src);
+      audio.loop = true;
+      audio.volume = 0.7;
+      audio.addEventListener('pause', () => render(false));
+      audio.addEventListener('playing', () => render(true));
+    }
+    if (audio.paused) {
+      wanted = true;
+      try {
+        await audio.play();
+      } catch {
+        wanted = false;
+        toast('음악을 재생하지 못했습니다');
+      }
+    } else {
+      wanted = false;
+      audio.pause();
+    }
+  });
+
+  // 다른 앱으로 나가거나 화면을 끄면 멈추고, 돌아오면 이어서 재생합니다.
+  document.addEventListener('visibilitychange', () => {
+    if (!audio) return;
+    if (document.hidden) audio.pause();
+    else if (wanted) audio.play().catch(() => {});
+  });
+
+  // 인트로가 끝난 뒤 잠깐 안내 문구를 보여 줍니다.
+  const introDelay = introPlanned ? 6000 : 1500;
+  window.setTimeout(() => hint?.classList.add('show'), introDelay);
+  window.setTimeout(() => hint?.classList.remove('show'), introDelay + 4500);
 }
 
 // ----- 복사 (카톡 인앱 브라우저처럼 clipboard API가 막힌 곳을 위한 예비 방법 포함) -----
