@@ -13,7 +13,7 @@
 
 ```sh
 npm install
-npm run dev      # 미리보기 (http://localhost:4321/wedding/)
+npm run dev      # 미리보기 (http://localhost:4321/moc/)
 npm run build    # dist/ 폴더에 배포용 파일 생성
 ```
 
@@ -23,4 +23,4 @@ npm run build    # dist/ 폴더에 배포용 파일 생성
 
 `main` 브랜치에 push 하면 GitHub Actions가 자동으로 빌드해서 GitHub Pages에 올립니다.
 
-- 주소: https://oh-jongjin.github.io/wedding/
+- 주소: https://oh-jongjin.github.io/moc/

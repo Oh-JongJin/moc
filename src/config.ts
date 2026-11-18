@@ -3,7 +3,7 @@
 
 export const config = {
   // 배포할 실제 주소 (카톡 미리보기 이미지 주소를 만드는 데 쓰입니다)
-  siteUrl: 'https://oh-jongjin.github.io/wedding/',
+  siteUrl: 'https://oh-jongjin.github.io/moc/',
 
   groom: {
     name: '오종진',
