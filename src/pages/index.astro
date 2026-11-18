@@ -90,7 +90,18 @@ const accountGroups = [
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/favicon.svg`} />
     <script is:inline>
-      document.documentElement.classList.add('js');
+      (function () {
+        var html = document.documentElement;
+        html.classList.add('js');
+        // 첫 방문 때만 인트로를 재생합니다. 주소 끝에 ?intro 를 붙이면 다시 볼 수 있습니다.
+        var seen = false;
+        try {
+          seen = !!sessionStorage.getItem('intro-seen');
+        } catch (e) {}
+        var force = location.search.indexOf('intro') > -1;
+        var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (force || (!seen && !reduce)) html.classList.add('intro');
+      })();
     </script>
   </head>
   <body>
@@ -108,12 +119,21 @@ const accountGroups = [
           loading="eager"
           fetchpriority="high"
         />
+        <!-- 인트로: 실제 사진 위에 해와 빛을 겹쳐, 해가 수평선 아래로 지는 장면을 만듭니다 -->
+        <div class="intro-daylight" aria-hidden="true"></div>
+        <div class="intro-halo" aria-hidden="true"></div>
+        <div class="intro-glitter" aria-hidden="true"></div>
+        <div class="intro-sunclip" aria-hidden="true"><div class="intro-sun"></div></div>
         <div class="hero-top">
           <p class="latin hero-label">We are getting married</p>
-          <h1 class="hero-names">
-            <span>{groom.name}</span>
-            <span class="hero-amp latin">and</span>
-            <span>{bride.name}</span>
+          <h1 class="hero-names" aria-label={`${groom.name} 그리고 ${bride.name}`}>
+            <span aria-hidden="true">
+              {[...groom.name].map((ch, i) => <span class="ch" style={`--i:${i}`}>{ch}</span>)}
+            </span>
+            <span class="hero-amp latin ch" style={`--i:${[...groom.name].length}`} aria-hidden="true">and</span>
+            <span aria-hidden="true">
+              {[...bride.name].map((ch, i) => <span class="ch" style={`--i:${[...groom.name].length + 1 + i}`}>{ch}</span>)}
+            </span>
           </h1>
         </div>
         <div class="hero-bottom">

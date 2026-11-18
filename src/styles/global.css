@@ -96,6 +96,7 @@ button {
   max-height: 960px;
   color: #fff;
   background: var(--night);
+  overflow: hidden;
 }
 
 .hero-photo {
@@ -151,7 +152,15 @@ button {
   text-shadow: 0 1px 14px rgba(20, 30, 60, 0.35);
 }
 
-.hero-names span {
+.hero-names > span {
+  display: block;
+}
+
+.hero-names .ch {
+  display: inline-block;
+}
+
+.hero-names .hero-amp.ch {
   display: block;
 }
 
@@ -177,6 +186,230 @@ button {
   margin-top: 2px;
   font-size: 15px;
   color: var(--on-night);
+}
+
+/* ----- 인트로: 노을이 지는 장면 -----
+   그린 배경이 아니라 실제 사진 위에 빛을 겹칩니다.
+   --horizon 은 사진 속 수평선 높이, --sun-x 는 해의 가로 위치입니다.
+   0.0초  아직 밝은 저녁, 수평선 위에 해가 떠 있고 물 위에 빛길이 비침
+   ~2.8초 해가 수평선 아래로 지며 사진이 원래의 노을빛으로 어두워짐
+   이후   이름이 한 글자씩, 마지막으로 날짜가 떠오름 */
+.hero {
+  --horizon: 42.5%;
+  --sun-x: 29%;
+  --sun-start: 104px; /* 처음에 해 중심이 수평선보다 얼마나 위에 있는지 */
+  --sun-travel: 142px;
+}
+
+.intro-daylight,
+.intro-halo,
+.intro-glitter,
+.intro-sunclip {
+  display: none;
+  position: absolute;
+  pointer-events: none;
+}
+
+.intro .intro-daylight,
+.intro .intro-halo,
+.intro .intro-glitter,
+.intro .intro-sunclip {
+  display: block;
+}
+
+/* 해가 떠 있는 동안의 밝은 하늘빛. 검은 실루엣은 그대로 두고 하늘과 물만 밝힙니다. */
+.intro-daylight {
+  inset: 0;
+  background: linear-gradient(
+    rgba(170, 205, 255, 0.75) 0%,
+    rgba(255, 236, 196, 0.9) calc(var(--horizon) - 0.4%),
+    rgba(150, 185, 235, 0.7) calc(var(--horizon) + 0.4%),
+    rgba(120, 150, 205, 0.45) 100%
+  );
+  mix-blend-mode: overlay;
+  animation: intro-daylight 3s ease-in-out both;
+}
+
+/* 해 주변으로 번지는 빛 (수평선 아래 물 위까지 번집니다) */
+.intro-halo {
+  top: calc(var(--horizon) - var(--sun-start));
+  left: var(--sun-x);
+  width: 560px;
+  height: 560px;
+  margin: -280px 0 0 -280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 222, 170, 0.5) 0%,
+    rgba(255, 205, 140, 0.36) 10%,
+    rgba(255, 180, 110, 0.22) 24%,
+    rgba(255, 155, 90, 0.1) 42%,
+    rgba(255, 140, 80, 0.03) 58%,
+    rgba(255, 130, 80, 0) 70%
+  );
+  mix-blend-mode: screen;
+  animation: intro-halo 2.8s cubic-bezier(0.3, 0, 0.6, 1) both;
+}
+
+/* 물 위의 빛길: 실제 파도의 밝은 부분만 더 밝혀서 윤슬처럼 보이게 합니다.
+   신랑 신부 쪽으로 번지지 않도록 해 바로 아래 좁은 범위에만 둡니다. */
+.intro-glitter {
+  top: var(--horizon);
+  left: var(--sun-x);
+  width: 150px;
+  height: 15%;
+  margin-left: -75px;
+  background: linear-gradient(rgba(214, 120, 52, 0.95), rgba(200, 104, 48, 0.6));
+  -webkit-mask-image: radial-gradient(42% 100% at 50% 0%, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+  mask-image: radial-gradient(42% 100% at 50% 0%, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+  mix-blend-mode: color-dodge;
+  animation: intro-glitter 3s ease-in-out both;
+}
+
+/* 수평선 위쪽만 보이게 잘라서, 해가 수평선 뒤로 넘어가게 합니다 */
+.intro-sunclip {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--horizon);
+  overflow: hidden;
+}
+
+.intro-sun {
+  position: absolute;
+  bottom: calc(var(--sun-start) - 120px);
+  left: var(--sun-x);
+  width: 240px;
+  height: 240px;
+  margin-left: -120px;
+  /* 카메라에 찍힌 해처럼: 윤곽선 없이 하얗게 날아간 중심이 주변으로 부드럽게 번집니다.
+     띠가 보이지 않도록 밝기가 완만하게 줄어드는 단계를 촘촘히 둡니다. */
+  background: radial-gradient(
+    circle closest-side,
+    rgba(255, 253, 244, 1) 0%,
+    rgba(255, 251, 236, 1) 5%,
+    rgba(255, 244, 214, 0.92) 8%,
+    rgba(255, 232, 184, 0.72) 11.5%,
+    rgba(255, 218, 158, 0.52) 16%,
+    rgba(255, 204, 138, 0.36) 22%,
+    rgba(255, 190, 120, 0.235) 30%,
+    rgba(255, 178, 108, 0.145) 40%,
+    rgba(255, 168, 100, 0.08) 52%,
+    rgba(255, 160, 94, 0.038) 66%,
+    rgba(255, 156, 90, 0.012) 82%,
+    rgba(255, 156, 90, 0) 100%
+  );
+  mix-blend-mode: screen;
+  animation: intro-sun 2.8s cubic-bezier(0.3, 0, 0.6, 1) both;
+}
+
+/* 수평선에 가까워지면 빛 번짐이 줄고, 붉은 해의 둥근 모양이 또렷해집니다.
+   실제 해처럼 색은 거의 균일하고 가장자리만 살짝 어둡습니다. */
+.intro-sun::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side, #ffe9c4 0%, #ffd9a2 45%, #ffc07c 78%, #ffa55f 94%, #ff9650 100%);
+  filter: blur(0.7px);
+  animation: intro-redden 2.8s ease-in both;
+}
+
+.intro .hero-photo {
+  /* 수평선을 중심으로 멀어지게 해서 해가 지는 위치가 어긋나지 않게 합니다 */
+  transform-origin: var(--sun-x) var(--horizon);
+  animation: intro-zoom 5.2s cubic-bezier(0.25, 0.5, 0.3, 1) both;
+}
+
+.intro .hero-label {
+  animation: intro-rise 0.9s ease 2.7s both;
+}
+
+.intro .hero-names .ch {
+  animation: intro-char 0.8s ease both;
+  animation-delay: calc(2.95s + var(--i) * 0.11s);
+}
+
+.intro .hero-bottom {
+  animation: intro-rise 1s ease 3.9s both;
+}
+
+@keyframes intro-daylight {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-sun {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    /* 내려갈수록 빛 번짐이 작아지고, 대기 굴절로 살짝 납작해집니다 */
+    transform: translateY(var(--sun-travel)) scale(0.72, 0.66);
+  }
+}
+
+@keyframes intro-halo {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  65% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(var(--sun-travel));
+  }
+}
+
+@keyframes intro-redden {
+  0%,
+  30% {
+    opacity: 0;
+  }
+  85%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-glitter {
+  0% {
+    opacity: 0.8;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-zoom {
+  from {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes intro-char {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
 }
 
 /* ----- 구역 공통 ----- */

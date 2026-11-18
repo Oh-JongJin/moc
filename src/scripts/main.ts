@@ -10,6 +10,21 @@ function toast(message: string) {
   toastTimer = window.setTimeout(() => toastEl.classList.remove('show'), 2200);
 }
 
+// ----- 인트로: 한 번 본 뒤에는 생략하고, 화면을 누르거나 넘기면 바로 건너뜁니다 -----
+const html = document.documentElement;
+if (html.classList.contains('intro')) {
+  try {
+    sessionStorage.setItem('intro-seen', '1');
+  } catch {}
+  const skipEvents = ['pointerdown', 'wheel', 'touchmove', 'keydown'] as const;
+  const endIntro = () => {
+    html.classList.remove('intro');
+    skipEvents.forEach((type) => window.removeEventListener(type, endIntro));
+  };
+  skipEvents.forEach((type) => window.addEventListener(type, endIntro, { passive: true }));
+  window.setTimeout(endIntro, 6000);
+}
+
 // ----- 복사 (카톡 인앱 브라우저처럼 clipboard API가 막힌 곳을 위한 예비 방법 포함) -----
 async function copyText(text: string): Promise<boolean> {
   try {
