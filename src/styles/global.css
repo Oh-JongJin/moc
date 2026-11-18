@@ -1,0 +1,754 @@
+/* 색은 메인 사진의 하늘에서 가져왔습니다: 밤바다 → 저녁 하늘 → 노을 → 모래 */
+:root {
+  --night: #141b30;
+  --dusk: #34446f;
+  --haze: #8a8fb2;
+  --glow: #e8935a;
+  --peach: #f5cfa3;
+  --sand: #fbf6ee;
+  --ink: #232b42;
+  --ink-soft: #5a6177;
+  --accent: #ad5220;
+  --line: #e6dccb;
+  --on-night: #f3ece1;
+  --on-night-soft: #b9bdd0;
+
+  --serif: 'Gowun Batang', 'Nanum Myeongjo', 'Apple SD Gothic Neo', serif;
+  --latin: 'Cormorant Garamond', 'Gowun Batang', serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0d1222;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.9;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+p,
+dl,
+dd,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.latin {
+  font-family: var(--latin);
+}
+
+/* PC에서는 휴대폰 폭의 카드가 가운데에 놓입니다 */
+.card {
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--sand);
+  overflow: hidden;
+  text-align: center;
+}
+
+@media (min-width: 431px) {
+  body {
+    background:
+      radial-gradient(120% 60% at 50% 100%, rgba(232, 147, 90, 0.28), transparent 70%),
+      linear-gradient(#1b2542, #0d1222);
+    background-attachment: fixed;
+  }
+  .card {
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* ----- 메인 ----- */
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+  max-height: 960px;
+  color: #fff;
+  background: var(--night);
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 100%;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(28, 40, 76, 0.38) 0%,
+    rgba(28, 40, 76, 0) 30%,
+    rgba(20, 27, 48, 0) 72%,
+    var(--night) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-top,
+.hero-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  padding: 0 24px;
+}
+
+.hero-top {
+  top: max(8%, 48px);
+}
+
+.hero-label {
+  font-size: 15px;
+  font-style: italic;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.hero-names {
+  margin-top: 18px;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  text-shadow: 0 1px 14px rgba(20, 30, 60, 0.35);
+}
+
+.hero-names span {
+  display: block;
+}
+
+.hero-names .hero-amp {
+  font-size: 19px;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  text-indent: 0;
+  opacity: 0.85;
+}
+
+.hero-bottom {
+  bottom: 34px;
+}
+
+.hero-date {
+  font-size: 25px;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+}
+
+.hero-place {
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--on-night);
+}
+
+/* ----- 구역 공통 ----- */
+section,
+.closing {
+  padding: 64px 28px;
+}
+
+.eyebrow {
+  font-size: 17px;
+  font-style: italic;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+.title {
+  margin-top: 2px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.title::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 28px;
+  margin: 18px auto 26px;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+/* ----- 인사말 (밤바다) ----- */
+.night {
+  padding-top: 56px;
+  background: var(--night);
+  color: var(--on-night);
+}
+
+.night .eyebrow {
+  color: var(--peach);
+}
+
+.greeting span {
+  display: block;
+}
+
+.greeting .gap {
+  height: 1em;
+}
+
+.family {
+  margin-top: 44px;
+  font-size: 17px;
+}
+
+.family .parents {
+  color: var(--on-night-soft);
+}
+
+.family strong {
+  margin-left: 6px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.contact {
+  margin-top: 36px;
+  display: grid;
+  gap: 12px;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-who {
+  flex: 1;
+  text-align: left;
+  font-size: 16px;
+  color: var(--on-night-soft);
+}
+
+.contact-row .btn {
+  width: 76px;
+}
+
+/* ----- 하늘 그라데이션 ----- */
+.sky {
+  height: 260px;
+}
+
+.sky-down {
+  background: linear-gradient(
+    var(--night) 0%,
+    var(--dusk) 26%,
+    var(--haze) 50%,
+    var(--glow) 72%,
+    var(--peach) 86%,
+    var(--sand) 100%
+  );
+}
+
+.sky-up {
+  background: linear-gradient(
+    var(--sand) 0%,
+    var(--peach) 14%,
+    var(--glow) 28%,
+    var(--haze) 50%,
+    var(--dusk) 74%,
+    var(--night) 100%
+  );
+}
+
+/* ----- 밝은 구역 ----- */
+.sand {
+  background: var(--sand);
+}
+
+.sand + .sand {
+  padding-top: 40px;
+}
+
+.when {
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+.calendar {
+  margin: 34px auto 0;
+  max-width: 330px;
+  padding: 22px 12px 18px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.calendar-month {
+  font-size: 22px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+.calendar-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 4px;
+  font-size: 16px;
+}
+
+.calendar-grid span {
+  display: grid;
+  place-items: center;
+  height: 40px;
+}
+
+.calendar-grid .dow {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.calendar-grid .sun {
+  color: var(--accent);
+}
+
+/* 예식일은 지는 해처럼 표시 */
+.calendar-grid .the {
+  position: relative;
+  z-index: 0;
+  color: #fff;
+  font-weight: 700;
+}
+
+.calendar-grid .the::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #f0a56c, #d9703a);
+  box-shadow: 0 0 0 6px rgba(232, 147, 90, 0.18);
+}
+
+.dday {
+  margin-top: 28px;
+  font-size: 16px;
+  color: var(--ink-soft);
+  min-height: 1.9em;
+}
+
+.dday strong {
+  color: var(--accent);
+  font-size: 19px;
+}
+
+/* ----- 갤러리 ----- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin: 0 -12px;
+}
+
+.gallery-item {
+  padding: 0;
+  border: 0;
+  background: var(--line);
+  aspect-ratio: 1;
+  cursor: pointer;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 사진을 넣기 전에 보이는 빈 칸: 노을빛으로 채워 둡니다 */
+.gallery-empty .gallery-item {
+  cursor: default;
+  background: linear-gradient(160deg, var(--haze), var(--glow) 70%, var(--peach));
+  opacity: 0.45;
+}
+
+.gallery-empty .gallery-item:nth-child(even) {
+  background: linear-gradient(200deg, var(--dusk), var(--haze) 60%, var(--glow));
+}
+
+.gallery-note {
+  margin-top: 18px;
+}
+
+.lightbox {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(10, 14, 26, 0.96);
+}
+
+.lightbox::backdrop {
+  background: rgba(10, 14, 26, 0.96);
+}
+
+.lightbox img {
+  position: absolute;
+  inset: 56px 0;
+  width: 100%;
+  height: calc(100% - 112px);
+  object-fit: contain;
+}
+
+.lb-btn {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lb-close {
+  top: 6px;
+  right: 6px;
+  font-size: 22px;
+}
+
+.lb-prev,
+.lb-next {
+  top: 50%;
+  margin-top: -24px;
+}
+
+.lb-prev {
+  left: 2px;
+}
+
+.lb-next {
+  right: 2px;
+}
+
+.lb-count {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  color: var(--on-night-soft);
+  font-family: var(--latin);
+  font-size: 17px;
+  letter-spacing: 0.1em;
+}
+
+/* ----- 오시는 길 ----- */
+.venue-name {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.venue-address {
+  color: var(--ink-soft);
+}
+
+.venue-tel a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.map {
+  height: 280px;
+  margin: 24px -28px 0;
+  background: var(--line);
+}
+
+.map-buttons {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.guides {
+  margin-top: 28px;
+  text-align: left;
+  border-top: 1px solid var(--line);
+}
+
+.guide {
+  display: flex;
+  gap: 16px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.guide dt {
+  flex: 0 0 56px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.guide dd {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.guide dd span {
+  display: block;
+}
+
+/* ----- 마음 전하실 곳 ----- */
+.note {
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+
+.accounts {
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.account-group {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fffdf9;
+  overflow: hidden;
+}
+
+.account-group summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 0 20px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.account-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.account-group summary::after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  margin-right: 4px;
+  border-right: 1.5px solid var(--accent);
+  border-bottom: 1.5px solid var(--accent);
+  transform: translateY(-3px) rotate(45deg);
+  transition: transform 0.25s;
+}
+
+.account-group[open] summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+.account-group li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+}
+
+.account-info {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.6;
+}
+
+.account-info span {
+  display: block;
+}
+
+.account-owner {
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.account-number {
+  font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* ----- 버튼 ----- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:focus-visible,
+summary:focus-visible,
+.gallery-item:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 2px;
+}
+
+.btn-line {
+  border-color: #cfc3ae;
+  background: #fffdf9;
+  padding: 0 6px;
+}
+
+.btn-ghost {
+  border-color: rgba(243, 236, 225, 0.45);
+  color: var(--on-night);
+}
+
+.btn-text {
+  margin-top: 6px;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.btn-small {
+  min-height: 44px;
+  padding: 0 18px;
+  border-color: var(--accent);
+  color: var(--accent);
+  font-size: 15px;
+  flex: none;
+}
+
+/* ----- 마무리 ----- */
+.closing {
+  padding-top: 24px;
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  background: var(--night);
+  color: var(--on-night);
+}
+
+.closing-text {
+  font-size: 18px;
+}
+
+.closing-names {
+  margin-top: 22px;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  color: var(--peach);
+}
+
+.share {
+  margin-top: 44px;
+  display: grid;
+  gap: 10px;
+}
+
+/* ----- 토스트 ----- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(32px + env(safe-area-inset-bottom));
+  z-index: 10;
+  max-width: calc(100vw - 48px);
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(20, 27, 48, 0.94);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ----- 등장 효과 (자바스크립트가 켜져 있을 때만 숨김) ----- */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease;
+}
+
+.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .btn,
+  .toast,
+  .account-group summary::after {
+    transition: none;
+  }
+}

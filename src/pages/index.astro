@@ -1,0 +1,345 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import '@fontsource/gowun-batang/400.css';
+import '@fontsource/gowun-batang/700.css';
+import '@fontsource/cormorant-garamond/400.css';
+import '@fontsource/cormorant-garamond/400-italic.css';
+import '../styles/global.css';
+import mainPhoto from '../assets/main.png';
+import { config } from '../config';
+
+const { groom, bride, venue, date, accounts, share } = config;
+
+// ----- 날짜 표기 -----
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
+const weekday = new Date(Date.UTC(date.year, date.month - 1, date.day)).getUTCDay();
+const pad = (n: number) => String(n).padStart(2, '0');
+const hourLabel =
+  date.hour === 12 ? '낮 12시' : date.hour < 12 ? `오전 ${date.hour}시` : `오후 ${date.hour - 12}시`;
+const timeLabel = date.minute ? `${hourLabel} ${date.minute}분` : hourLabel;
+const dateLabel = `${date.year}년 ${date.month}월 ${date.day}일 ${WEEKDAYS[weekday]}요일`;
+const dateDots = `${date.year}. ${pad(date.month)}. ${pad(date.day)}`;
+const isoDate = `${date.year}-${pad(date.month)}-${pad(date.day)}`;
+
+// ----- 달력 -----
+const firstWeekday = new Date(Date.UTC(date.year, date.month - 1, 1)).getUTCDay();
+const daysInMonth = new Date(Date.UTC(date.year, date.month, 0)).getUTCDate();
+const calendarCells: (number | null)[] = [
+  ...Array(firstWeekday).fill(null),
+  ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+];
+
+// ----- 지도 링크 -----
+const q = encodeURIComponent(venue.mapQuery);
+const mapLinks = [
+  { label: '네이버지도', href: `https://map.naver.com/p/search/${q}` },
+  { label: '카카오맵', href: `https://map.kakao.com/link/search/${q}` },
+  { label: '티맵', href: `tmap://search?name=${q}` },
+];
+
+// ----- 갤러리: src/assets/gallery 폴더에 사진을 넣으면 파일 이름순으로 자동 표시 -----
+const galleryModules = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/gallery/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
+  { eager: true },
+);
+const galleryFiles = Object.keys(galleryModules)
+  .sort()
+  .map((key) => galleryModules[key].default);
+const galleryFull = await Promise.all(
+  galleryFiles.map((src) => getImage({ src, width: Math.min(src.width, 1500), format: 'webp' })),
+);
+
+// ----- 카톡 미리보기 이미지 -----
+const ogImage = await getImage({
+  src: mainPhoto,
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  format: 'jpg',
+  quality: 82,
+});
+const ogImageUrl = new URL(ogImage.src, config.siteUrl).href;
+
+const telHref = (phone: string) => `tel:${phone.replace(/[^0-9+]/g, '')}`;
+const smsHref = (phone: string) => `sms:${phone.replace(/[^0-9+]/g, '')}`;
+
+const accountGroups = [
+  { label: '신랑측 계좌번호', list: accounts.groom },
+  { label: '신부측 계좌번호', list: accounts.bride },
+];
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#3f5384" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>{share.title}</title>
+    <meta name="description" content={share.description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={share.title} />
+    <meta property="og:description" content={share.description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content={config.siteUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/favicon.svg`} />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <main class="card">
+      <!-- 메인 -->
+      <header class="hero">
+        <Image
+          class="hero-photo"
+          src={mainPhoto}
+          alt="노을 지는 바다를 함께 바라보는 신랑 신부의 뒷모습"
+          widths={[480, 860, 1290]}
+          sizes="(min-width: 430px) 430px, 100vw"
+          format="webp"
+          quality={82}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="hero-top">
+          <p class="latin hero-label">We are getting married</p>
+          <h1 class="hero-names">
+            <span>{groom.name}</span>
+            <span class="hero-amp latin">and</span>
+            <span>{bride.name}</span>
+          </h1>
+        </div>
+        <div class="hero-bottom">
+          <p class="hero-date latin">{dateDots}</p>
+          <p class="hero-place">{WEEKDAYS[weekday]}요일 {timeLabel} · {venue.name}</p>
+        </div>
+      </header>
+
+      <!-- 인사말 (밤바다) -->
+      <section class="night">
+        <div class="reveal">
+          <p class="latin eyebrow">Invitation</p>
+          <h2 class="title">소중한 분들을 초대합니다</h2>
+          <p class="greeting">
+            {config.greeting.map((line) => (line ? <span>{line}</span> : <span class="gap" />))}
+          </p>
+        </div>
+
+        <div class="family reveal">
+          <p>
+            <span class="parents">{groom.father} · {groom.mother}</span>의 {groom.relation}
+            <strong>{groom.name}</strong>
+          </p>
+          <p>
+            <span class="parents">{bride.father} · {bride.mother}</span>의 {bride.relation}
+            <strong>{bride.name}</strong>
+          </p>
+        </div>
+
+        <div class="contact reveal">
+          {
+            [
+              { role: '신랑', person: groom },
+              { role: '신부', person: bride },
+            ].map(({ role, person }) => (
+              <div class="contact-row">
+                <span class="contact-who">{role}에게 연락하기</span>
+                <a class="btn btn-ghost" href={telHref(person.phone)}>전화</a>
+                <a class="btn btn-ghost" href={smsHref(person.phone)}>문자</a>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- 밤에서 노을로 넘어가는 하늘 -->
+      <div class="sky sky-down" aria-hidden="true"></div>
+
+      <!-- 예식 일시 -->
+      <section class="sand">
+        <div class="reveal">
+          <p class="latin eyebrow">The Day</p>
+          <h2 class="title">예식 일시</h2>
+          <p class="when">
+            {dateLabel}<br />{timeLabel}
+          </p>
+        </div>
+
+        <div class="calendar reveal" aria-label={`${date.year}년 ${date.month}월 달력`}>
+          <p class="calendar-month latin">{date.year}. {pad(date.month)}</p>
+          <div class="calendar-grid">
+            {WEEKDAYS.map((d, i) => <span class:list={['dow', { sun: i === 0 }]}>{d}</span>)}
+            {
+              calendarCells.map((d, i) =>
+                d === null ? (
+                  <span />
+                ) : (
+                  <span class:list={['day', { sun: i % 7 === 0, the: d === date.day }]}>{d}</span>
+                ),
+              )
+            }
+          </div>
+        </div>
+
+        <p class="dday reveal" id="dday" data-date={isoDate}></p>
+      </section>
+
+      <!-- 사진첩: src/assets/gallery 폴더에 사진을 넣으면 채워집니다 -->
+      <section class="sand">
+        <div class="reveal">
+          <p class="latin eyebrow">Gallery</p>
+          <h2 class="title">우리의 사진첩</h2>
+        </div>
+        {
+          galleryFiles.length > 0 ? (
+            <div class="gallery reveal">
+              {galleryFiles.map((src, i) => (
+                <button class="gallery-item" type="button" data-full={galleryFull[i].src} aria-label={`사진 ${i + 1} 크게 보기`}>
+                  <Image src={src} alt="" width={420} height={420} fit="cover" format="webp" quality={75} loading="lazy" />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <>
+              <div class="gallery gallery-empty reveal" aria-hidden="true">
+                {Array.from({ length: 6 }, () => <span class="gallery-item" />)}
+              </div>
+              <p class="note gallery-note reveal">사진을 준비하고 있습니다.</p>
+            </>
+          )
+        }
+      </section>
+
+      <!-- 오시는 길 -->
+      <section class="sand">
+        <div class="reveal">
+          <p class="latin eyebrow">Location</p>
+          <h2 class="title">오시는 길</h2>
+          <p class="venue-name">{venue.name} {venue.hall}</p>
+          <p class="venue-address">{venue.address}</p>
+          {venue.tel && <p class="venue-tel"><a href={telHref(venue.tel)}>{venue.tel}</a></p>}
+        </div>
+
+        {
+          config.naverMapClientId && (
+            <div
+              class="map reveal"
+              id="map"
+              data-lat={venue.lat}
+              data-lng={venue.lng}
+              data-name={venue.name}
+              role="img"
+              aria-label={`${venue.name} 위치 지도`}
+            />
+          )
+        }
+
+        <div class="map-buttons reveal">
+          {mapLinks.map((m) => <a class="btn btn-line" href={m.href} target="_blank" rel="noopener">{m.label}</a>)}
+        </div>
+        <button class="btn btn-text reveal" type="button" data-copy={venue.address} data-copied="주소를 복사했습니다">
+          주소 복사하기
+        </button>
+
+        {
+          venue.guides.length > 0 && (
+            <dl class="guides reveal">
+              {venue.guides.map((g) => (
+                <div class="guide">
+                  <dt>{g.title}</dt>
+                  <dd>{g.lines.map((line) => <span>{line}</span>)}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+      </section>
+
+      <!-- 마음 전하실 곳 -->
+      <section class="sand">
+        <div class="reveal">
+          <p class="latin eyebrow">With Heart</p>
+          <h2 class="title">마음 전하실 곳</h2>
+          <p class="note">
+            참석이 어려우신 분들을 위해<br />계좌번호를 함께 적어 둡니다.<br />너그러운 마음으로 양해 부탁드립니다.
+          </p>
+        </div>
+
+        <div class="accounts reveal">
+          {
+            accountGroups.map((group) => (
+              <details class="account-group">
+                <summary>{group.label}</summary>
+                <ul>
+                  {group.list.map((a) => (
+                    <li>
+                      <div class="account-info">
+                        <span class="account-owner">{a.role} {a.name}</span>
+                        <span class="account-number">{a.bank} {a.number}</span>
+                      </div>
+                      <button
+                        class="btn btn-small"
+                        type="button"
+                        data-copy={`${a.bank} ${a.number}`}
+                        data-copied="계좌번호를 복사했습니다"
+                      >
+                        복사
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- 다시 노을로 -->
+      <div class="sky sky-up" aria-hidden="true"></div>
+
+      <footer class="closing">
+        <div class="reveal">
+          <p class="closing-text">
+            저무는 하루 끝에서도<br />늘 서로의 곁에 서 있겠습니다.
+          </p>
+          <p class="closing-names">{groom.name} · {bride.name}</p>
+          <div class="share">
+            {
+              share.kakaoJsKey && (
+                <button class="btn btn-ghost" type="button" id="kakao-share">
+                  카카오톡으로 공유하기
+                </button>
+              )
+            }
+            <button class="btn btn-ghost" type="button" id="link-share">청첩장 링크 복사하기</button>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    {
+      galleryFiles.length > 0 && (
+        <dialog class="lightbox" id="lightbox" aria-label="사진 크게 보기">
+          <img alt="" />
+          <button class="lb-btn lb-close" type="button" aria-label="닫기">✕</button>
+          <button class="lb-btn lb-prev" type="button" aria-label="이전 사진">‹</button>
+          <button class="lb-btn lb-next" type="button" aria-label="다음 사진">›</button>
+          <p class="lb-count"></p>
+        </dialog>
+      )
+    }
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      import '../scripts/main.ts';
+    </script>
+  </body>
+</html>
