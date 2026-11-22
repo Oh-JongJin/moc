@@ -683,10 +683,6 @@ section,
   background: linear-gradient(200deg, var(--dusk), var(--haze) 60%, var(--glow));
 }
 
-.gallery-more {
-  margin-top: 16px;
-}
-
 .gallery-note {
   margin-top: 18px;
 }
@@ -722,6 +718,13 @@ section,
 
 .lightbox {
   touch-action: none;
+  overscroll-behavior: contain;
+}
+
+/* 사진을 크게 보는 동안에는 뒤 페이지가 스크롤되지 않습니다 */
+.lb-open,
+.lb-open body {
+  overflow: hidden;
 }
 
 .gallery img,

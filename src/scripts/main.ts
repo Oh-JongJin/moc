@@ -225,19 +225,16 @@ document.querySelectorAll<HTMLElement>('#gallery, #lightbox').forEach((area) => 
   const stop = (e: Event) => e.preventDefault();
   area.addEventListener('gesturestart', stop);
   area.addEventListener('gesturechange', stop);
-  area.addEventListener('touchmove', (e) => (e as TouchEvent).touches.length > 1 && e.preventDefault(), {
+  // 크게 보기 화면에서는 손가락을 움직이거나 휠을 굴려도 뒤 페이지가 스크롤되지 않게 모두 막습니다
+  const lock = area.id === 'lightbox';
+  area.addEventListener('touchmove', (e) => (lock || (e as TouchEvent).touches.length > 1) && e.preventDefault(), {
     passive: false,
   });
-  area.addEventListener('wheel', (e) => (e as WheelEvent).ctrlKey && e.preventDefault(), { passive: false });
+  area.addEventListener('wheel', (e) => (lock || (e as WheelEvent).ctrlKey) && e.preventDefault(), {
+    passive: false,
+  });
   area.addEventListener('contextmenu', stop);
   area.addEventListener('dragstart', stop);
-});
-
-// ----- 갤러리 더 보기 -----
-const galleryMore = document.getElementById('gallery-more');
-galleryMore?.addEventListener('click', () => {
-  document.querySelectorAll<HTMLElement>('#gallery .gallery-item[hidden]').forEach((el) => (el.hidden = false));
-  galleryMore.remove();
 });
 
 // ----- 갤러리 크게 보기 -----
@@ -257,10 +254,12 @@ if (lightbox && items.length) {
   items.forEach((item, i) =>
     item.addEventListener('click', () => {
       show(i);
+      html.classList.add('lb-open'); // 사진을 보는 동안 뒤 페이지 스크롤을 잠급니다
       lightbox.showModal();
     }),
   );
   lightbox.querySelector('.lb-close')!.addEventListener('click', () => lightbox.close());
+  lightbox.addEventListener('close', () => html.classList.remove('lb-open'));
   lightbox.querySelector('.lb-prev')!.addEventListener('click', () => show(index - 1));
   lightbox.querySelector('.lb-next')!.addEventListener('click', () => show(index + 1));
   lightbox.addEventListener('click', (e) => {
