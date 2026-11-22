@@ -367,6 +367,34 @@ const accountGroups = [
         </div>
       </section>
 
+      <!-- 방명록 -->
+      {
+        config.guestbook.apiKey && (
+          <section class="sand guestbook" id="guestbook">
+            <div class="reveal">
+              <p class="latin eyebrow">Guestbook</p>
+              <h2 class="title">방명록</h2>
+              <p class="note">두 사람에게 축하의 한마디를 남겨 주세요.</p>
+            </div>
+
+            <form class="gb-form reveal" id="gb-form" novalidate>
+              <label class="sr-only" for="gb-name">이름</label>
+              <input id="gb-name" name="name" type="text" maxlength="20" placeholder="이름" autocomplete="name" required />
+              <label class="sr-only" for="gb-message">축하 메시지</label>
+              <textarea id="gb-message" name="message" rows="4" maxlength="300" placeholder="축하 메시지" required />
+              <div class="gb-form-foot">
+                <span class="gb-count" id="gb-count" aria-hidden="true">0 / 300</span>
+                <button class="btn btn-fill" type="submit">남기기</button>
+              </div>
+            </form>
+
+            <p class="gb-status" id="gb-status" role="status">방명록을 불러오는 중입니다.</p>
+            <ul class="gb-list" id="gb-list" />
+            <button class="btn btn-text" id="gb-more" type="button" hidden>더 보기</button>
+          </section>
+        )
+      }
+
       <!-- 다시 노을로 -->
       <div class="sky sky-up" aria-hidden="true"></div>
 

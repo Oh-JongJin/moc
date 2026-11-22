@@ -70,6 +70,17 @@ export const config = {
     ],
   },
 
+  // 방명록: Firebase 프로젝트의 웹 앱 설정값. apiKey를 비워 두면 방명록이 사라집니다.
+  // (이 값들은 웹페이지에 공개되어도 되는 값입니다. 보안은 Firestore 보안 규칙으로 지킵니다.)
+  guestbook: {
+    apiKey: 'AIzaSyD_TNcdy27dnxHRF0j7h4bjfxGygwWjLEo',
+    authDomain: 'mochung-d48b2.firebaseapp.com',
+    projectId: 'mochung-d48b2',
+    storageBucket: 'mochung-d48b2.firebasestorage.app',
+    messagingSenderId: '151974709335',
+    appId: '1:151974709335:web:a08d5bb8947afcaf1afb12',
+  },
+
   share: {
     // 카톡 등에 링크를 보냈을 때 보이는 제목과 설명
     title: '오종진 ♥ 배지은 결혼합니다',

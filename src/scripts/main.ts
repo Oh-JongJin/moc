@@ -257,3 +257,23 @@ if (lightbox && items.length) {
     if (Math.abs(dx) > 45) show(index + (dx < 0 ? 1 : -1));
   });
 }
+
+// ----- 방명록: 화면에 가까워지면 그때 불러옵니다 (첫 화면 속도에 영향을 주지 않도록) -----
+const guestbookEl = document.getElementById('guestbook');
+if (guestbookEl) {
+  const start = () => import('./guestbook').then((m) => m.initGuestbook(toast));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          start();
+        }
+      },
+      { rootMargin: '800px 0px' },
+    );
+    io.observe(guestbookEl);
+  } else {
+    start();
+  }
+}

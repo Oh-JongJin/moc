@@ -947,6 +947,137 @@ summary:focus-visible,
   flex: none;
 }
 
+/* ----- 방명록 ----- */
+/* hidden 속성을 준 요소는 버튼 모양 스타일보다 우선해서 숨깁니다 */
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.gb-form {
+  margin-top: 28px;
+  display: grid;
+  gap: 10px;
+  text-align: left;
+}
+
+/* 글자 크기가 16px보다 작으면 아이폰에서 입력할 때 화면이 확대됩니다 */
+.gb-form input,
+.gb-form textarea {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid #cfc3ae;
+  border-radius: 10px;
+  background: #fffdf9;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.gb-form textarea {
+  resize: none;
+}
+
+.gb-form input:focus-visible,
+.gb-form textarea:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 1px;
+}
+
+.gb-form ::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.7;
+}
+
+.gb-form-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gb-count {
+  padding-left: 4px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-fill {
+  padding: 0 28px;
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-fill:disabled {
+  opacity: 0.5;
+}
+
+.gb-status {
+  margin-top: 32px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.gb-list {
+  margin-top: 32px;
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.gb-list:empty {
+  display: none;
+}
+
+.gb-item {
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fffdf9;
+}
+
+.gb-item-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gb-item-head strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.gb-item-head time {
+  flex: none;
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.gb-item p {
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#gb-more {
+  margin-top: 14px;
+}
+
 /* ----- 마무리 ----- */
 .closing {
   padding-top: 24px;
