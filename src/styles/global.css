@@ -683,6 +683,10 @@ section,
   background: linear-gradient(200deg, var(--dusk), var(--haze) 60%, var(--glow));
 }
 
+.gallery-more {
+  margin-top: 16px;
+}
+
 .gallery-note {
   margin-top: 18px;
 }
@@ -709,6 +713,23 @@ section,
   width: 100%;
   height: calc(100% - 112px);
   object-fit: contain;
+}
+
+/* 사진은 더 확대하거나 길게 눌러 저장하지 못하게 합니다 (세로 스크롤과 좌우 넘기기는 그대로) */
+.gallery {
+  touch-action: pan-y;
+}
+
+.lightbox {
+  touch-action: none;
+}
+
+.gallery img,
+.lightbox img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .lb-btn {

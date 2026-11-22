@@ -219,6 +219,27 @@ if (kakaoBtn && config.share.kakaoJsKey) {
   });
 }
 
+// ----- 사진 확대 막기 -----
+// 사진첩과 크게 보기 화면에서는 두 손가락 확대, 트랙패드 확대, 길게 눌러 저장을 막습니다.
+document.querySelectorAll<HTMLElement>('#gallery, #lightbox').forEach((area) => {
+  const stop = (e: Event) => e.preventDefault();
+  area.addEventListener('gesturestart', stop);
+  area.addEventListener('gesturechange', stop);
+  area.addEventListener('touchmove', (e) => (e as TouchEvent).touches.length > 1 && e.preventDefault(), {
+    passive: false,
+  });
+  area.addEventListener('wheel', (e) => (e as WheelEvent).ctrlKey && e.preventDefault(), { passive: false });
+  area.addEventListener('contextmenu', stop);
+  area.addEventListener('dragstart', stop);
+});
+
+// ----- 갤러리 더 보기 -----
+const galleryMore = document.getElementById('gallery-more');
+galleryMore?.addEventListener('click', () => {
+  document.querySelectorAll<HTMLElement>('#gallery .gallery-item[hidden]').forEach((el) => (el.hidden = false));
+  galleryMore.remove();
+});
+
 // ----- 갤러리 크게 보기 -----
 const lightbox = document.getElementById('lightbox') as HTMLDialogElement | null;
 const items = [...document.querySelectorAll<HTMLElement>('.gallery-item')];
