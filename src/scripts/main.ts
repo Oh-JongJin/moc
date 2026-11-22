@@ -133,6 +133,28 @@ if (ddayEl?.dataset.date) {
   else ddayEl.innerHTML = `${names}, 함께한 지 <strong>${-diff}일</strong>째입니다`;
 }
 
+// ----- 티맵 열기 -----
+// 티맵은 앱으로만 열립니다. PC에서는 안내만 하고, 휴대폰에 앱이 없으면 설치 화면으로 보냅니다.
+document.querySelector<HTMLAnchorElement>('[data-app="tmap"]')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  const link = e.currentTarget as HTMLAnchorElement;
+  const ua = navigator.userAgent;
+  const android = /Android/i.test(ua);
+  const ios = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+  if (!android && !ios) return toast('티맵은 휴대폰에서 열 수 있습니다');
+
+  const store = android
+    ? 'https://play.google.com/store/apps/details?id=com.skt.tmap.ku'
+    : 'https://apps.apple.com/kr/app/id431589174';
+  const startedAt = Date.now();
+  // 앱이 열리면 이 페이지는 가려집니다. 잠시 뒤에도 그대로 보이면 앱이 없는 것으로 봅니다.
+  window.setTimeout(() => {
+    if (document.hidden || Date.now() - startedAt > 3000) return;
+    location.href = store;
+  }, 1800);
+  location.href = link.href;
+});
+
 // ----- 네이버 지도 -----
 const mapEl = document.getElementById('map');
 if (mapEl && config.naverMapClientId) {

@@ -29,7 +29,11 @@ export const config = {
     address: '경기 안양시 동안구 시민대로159번길 25',
     tel: '', // 예식장 전화번호 (비워 두면 표시하지 않습니다)
     // 지도 앱에서 검색할 이름
-    mapQuery: '파티오벨라 안양',
+    mapQuery: '파티오벨라',
+    // 네이버지도 길찾기 주소 (네이버지도에서 예식장을 '도착'으로 지정한 뒤 복사한 주소)
+    // 비워 두면 네이버지도 버튼은 위 이름으로 검색합니다.
+    naverDirections:
+      'https://map.naver.com/p/directions/-/3zgnSq,2AEFpH,%ED%8C%8C%ED%8B%B0%EC%98%A4%EB%B2%A8%EB%9D%BC,1572417432,PLACE_POI/-/transit',
     // 지도에 핀을 찍을 좌표 (위도, 경도)
     lat: 37.3905777,
     lng: 126.9475553,

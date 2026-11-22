@@ -32,10 +32,16 @@ const calendarCells: (number | null)[] = [
 
 // ----- 지도 링크 -----
 const q = encodeURIComponent(venue.mapQuery);
-const mapLinks = [
-  { label: '네이버지도', href: `https://map.naver.com/p/search/${q}` },
-  { label: '카카오맵', href: `https://map.kakao.com/link/search/${q}` },
-  { label: '티맵', href: `tmap://search?name=${q}` },
+const mapLinks: { label: string; href: string; app?: string }[] = [
+  // 세 버튼 모두 예식장이 도착지로 지정된 길찾기 화면을 엽니다
+  { label: '네이버지도', href: venue.naverDirections || `https://map.naver.com/p/search/${q}` },
+  { label: '카카오맵', href: `https://map.kakao.com/link/to/${encodeURIComponent(venue.name)},${venue.lat},${venue.lng}` },
+  // 티맵은 앱 전용 주소라서 새 창이 아닌 현재 창에서 열고, 앱이 없으면 설치 화면으로 안내합니다 (main.ts)
+  {
+    label: '티맵',
+    href: `tmap://route?goalname=${encodeURIComponent(venue.name)}&goalx=${venue.lng}&goaly=${venue.lat}`,
+    app: 'tmap',
+  },
 ];
 
 // ----- 갤러리: src/assets/gallery 폴더에 사진을 넣으면 파일 이름순으로 자동 표시 -----
@@ -76,7 +82,7 @@ const accountGroups = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="theme-color" content="#9aa0ad" />
+    <meta name="theme-color" content="#3f5384" />
     <meta name="format-detection" content="telephone=no" />
     <title>{share.title}</title>
     <meta name="description" content={share.description} />
@@ -143,7 +149,7 @@ const accountGroups = [
         <Image
           class="hero-photo"
           src={mainPhoto}
-          alt="수평선으로 지는 해를 함께 바라보는 신랑 신부의 뒷모습"
+          alt="노을 지는 바다를 함께 바라보는 신랑 신부의 뒷모습"
           widths={[480, 860, 1290]}
           sizes="(min-width: 430px) 430px, 100vw"
           format="webp"
@@ -151,11 +157,11 @@ const accountGroups = [
           loading="eager"
           fetchpriority="high"
         />
-        <!-- 인트로: 사진 속 실제 해에 빛을 겹쳐, 눈부시던 해가 서서히 잦아드는 장면을 만듭니다 -->
+        <!-- 인트로: 실제 사진 위에 해와 빛을 겹쳐, 해가 수평선 아래로 지는 장면을 만듭니다 -->
         <div class="intro-daylight" aria-hidden="true"></div>
         <div class="intro-halo" aria-hidden="true"></div>
         <div class="intro-glitter" aria-hidden="true"></div>
-        <div class="intro-sun" aria-hidden="true"></div>
+        <div class="intro-sunclip" aria-hidden="true"><div class="intro-sun"></div></div>
         <div class="hero-top">
           <p class="latin hero-label">We are getting married</p>
           <h1 class="hero-names" aria-label={`${groom.name} 그리고 ${bride.name}`}>
@@ -296,7 +302,13 @@ const accountGroups = [
         }
 
         <div class="map-buttons reveal">
-          {mapLinks.map((m) => <a class="btn btn-line" href={m.href} target="_blank" rel="noopener">{m.label}</a>)}
+          {mapLinks.map((m) =>
+            m.app ? (
+              <a class="btn btn-line" href={m.href} data-app={m.app}>{m.label}</a>
+            ) : (
+              <a class="btn btn-line" href={m.href} target="_blank" rel="noopener">{m.label}</a>
+            )
+          )}
         </div>
         <button class="btn btn-text reveal" type="button" data-copy={venue.address} data-copied="주소를 복사했습니다">
           주소 복사하기
